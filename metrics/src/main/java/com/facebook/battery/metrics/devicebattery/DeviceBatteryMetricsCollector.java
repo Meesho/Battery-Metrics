@@ -16,6 +16,8 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.SystemClock;
 import androidx.annotation.Nullable;
+
+import com.facebook.battery.metrics.core.DeviceBatteryMetricsInterface;
 import com.facebook.battery.metrics.core.SystemMetricsCollector;
 import com.facebook.battery.metrics.core.SystemMetricsLogger;
 import com.facebook.battery.metrics.core.VisibleToAvoidSynthetics;
@@ -32,7 +34,7 @@ public class DeviceBatteryMetricsCollector extends SystemMetricsCollector<Device
   private static final String TAG = "DeviceBatteryMetricsCollector";
   static int UNKNOWN_LEVEL = -1;
 
-  private final Context mContext;
+  private Context mContext;
 
   @GuardedBy("this")
   @VisibleToAvoidSynthetics
@@ -50,6 +52,40 @@ public class DeviceBatteryMetricsCollector extends SystemMetricsCollector<Device
   @VisibleToAvoidSynthetics
   boolean mIsCurrentlyCharging;
 
+  BroadcastReceiver myReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      long now = SystemClock.elapsedRealtime();
+      synchronized (DeviceBatteryMetricsCollector.this) {
+        switch (intent.getAction()) {
+          case Intent.ACTION_POWER_CONNECTED:
+            if (!mIsCurrentlyCharging) {
+              mBatteryRealtimeMs += (now - mLastUpdateMs);
+            } else {
+              // This should not happen
+              mChargingRealtimeMs += (now - mLastUpdateMs);
+              logIncorrectSequence("CONNECTED", now);
+            }
+            mIsCurrentlyCharging = true;
+            break;
+
+          case Intent.ACTION_POWER_DISCONNECTED:
+            if (mIsCurrentlyCharging) {
+              mChargingRealtimeMs += (now - mLastUpdateMs);
+            } else {
+              // This should not happen
+              mBatteryRealtimeMs += (now - mLastUpdateMs);
+              logIncorrectSequence("DISCONNECTED", now);
+            }
+            mIsCurrentlyCharging = false;
+            break;
+          default:
+        }
+        mLastUpdateMs = now;
+      }
+    }
+  };
+
   public DeviceBatteryMetricsCollector(Context context) {
     mContext = context;
 
@@ -64,46 +100,15 @@ public class DeviceBatteryMetricsCollector extends SystemMetricsCollector<Device
 
     // Register the receiver for power connected and disconnected
     // This is not very accurate after targeting SDK 26
-    context.registerReceiver(
-        new BroadcastReceiver() {
-          @Override
-          public void onReceive(Context context, Intent intent) {
-            long now = SystemClock.elapsedRealtime();
-            synchronized (DeviceBatteryMetricsCollector.this) {
-              switch (intent.getAction()) {
-                case Intent.ACTION_POWER_CONNECTED:
-                  if (!mIsCurrentlyCharging) {
-                    mBatteryRealtimeMs += (now - mLastUpdateMs);
-                  } else {
-                    // This should not happen
-                    mChargingRealtimeMs += (now - mLastUpdateMs);
-                    logIncorrectSequence("CONNECTED", now);
-                  }
-                  mIsCurrentlyCharging = true;
-                  break;
 
-                case Intent.ACTION_POWER_DISCONNECTED:
-                  if (mIsCurrentlyCharging) {
-                    mChargingRealtimeMs += (now - mLastUpdateMs);
-                  } else {
-                    // This should not happen
-                    mBatteryRealtimeMs += (now - mLastUpdateMs);
-                    logIncorrectSequence("DISCONNECTED", now);
-                  }
-                  mIsCurrentlyCharging = false;
-                  break;
-                default:
-              }
-              mLastUpdateMs = now;
-            }
-          }
-        },
+    context.registerReceiver(
+            myReceiver,
         intentFilter);
   }
 
   @Override
   @ThreadSafe(enableChecks = false)
-  public boolean getSnapshot(DeviceBatteryMetrics snapshot) {
+  public boolean getSnapshot(DeviceBatteryMetrics snapshot, @javax.annotation.Nullable Context context) {
     checkNotNull(snapshot, "Null value passed to getSnapshot!");
     snapshot.batteryLevelPct = getBatteryLevel(getBatteryIntent());
     long now = SystemClock.elapsedRealtime();
@@ -166,5 +171,14 @@ public class DeviceBatteryMetricsCollector extends SystemMetricsCollector<Device
   void logIncorrectSequence(String intentType, long now) {
     SystemMetricsLogger.wtf(
         TAG, "Consecutive " + intentType + "broadcasts: (" + mLastUpdateMs + ", " + now + ")");
+  }
+
+  public void cleanUp() {
+    try {
+      mContext.unregisterReceiver(myReceiver);
+      mContext = null;
+    } catch (IllegalArgumentException e) {
+      SystemMetricsLogger.wtf(TAG, "Receiver not registered 123");
+    }
   }
 }

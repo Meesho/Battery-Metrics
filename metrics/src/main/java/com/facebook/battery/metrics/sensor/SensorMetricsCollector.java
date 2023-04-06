@@ -7,6 +7,7 @@
 
 package com.facebook.battery.metrics.sensor;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.os.Build;
@@ -135,7 +136,7 @@ public class SensorMetricsCollector extends SystemMetricsCollector<SensorMetrics
   }
 
   @Override
-  public synchronized boolean getSnapshot(SensorMetrics snapshot) {
+  public synchronized boolean getSnapshot(SensorMetrics snapshot, @javax.annotation.Nullable Context context) {
     Utilities.checkNotNull(snapshot, "Null value passed to getSnapshot!");
 
     if (!mEnabled) {

@@ -15,6 +15,8 @@ import com.facebook.battery.metrics.core.SystemMetricsCollector;
 import com.facebook.battery.metrics.core.SystemMetricsLogger;
 import com.facebook.infer.annotation.ThreadSafe;
 
+import javax.annotation.Nullable;
+
 @RequiresApi(api = Build.VERSION_CODES.N)
 @ThreadSafe(enableChecks = false)
 public class HealthStatsMetricsCollector extends SystemMetricsCollector<HealthStatsMetrics> {
@@ -30,7 +32,7 @@ public class HealthStatsMetricsCollector extends SystemMetricsCollector<HealthSt
   @Override
   @SuppressWarnings("CatchGeneralException")
   // because takeMyUidSnapshot wraps RemoteException in a RuntimeException
-  public boolean getSnapshot(HealthStatsMetrics snapshot) {
+  public boolean getSnapshot(HealthStatsMetrics snapshot, @Nullable Context context) {
     try {
       snapshot.set(mSystemHealthManager.takeMyUidSnapshot());
       return true;

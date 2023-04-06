@@ -39,8 +39,8 @@ public class MemoryMetricsTest extends SystemMetricsTest<MemoryMetrics> {
     MemoryMetricsCollector collector = new MemoryMetricsCollector();
     collector.enable();
 
-    collector.getSnapshot(a);
-    collector.getSnapshot(b);
+    collector.getSnapshot(a, null);
+    collector.getSnapshot(b, null);
 
     sum = b.sum(a, sum);
     assertThat(sum.sequenceNumber).isEqualTo(b.sequenceNumber);
@@ -71,8 +71,8 @@ public class MemoryMetricsTest extends SystemMetricsTest<MemoryMetrics> {
     MemoryMetricsCollector collector = new MemoryMetricsCollector();
     collector.enable();
 
-    collector.getSnapshot(a);
-    collector.getSnapshot(b);
+    collector.getSnapshot(a, null);
+    collector.getSnapshot(b, null);
 
     sum = b.diff(a, sum);
     assertThat(sum.sequenceNumber).isEqualTo(b.sequenceNumber);

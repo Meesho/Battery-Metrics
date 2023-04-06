@@ -9,6 +9,7 @@ package com.facebook.battery.metrics.cpu;
 
 import static com.facebook.battery.metrics.core.Utilities.checkNotNull;
 
+import android.content.Context;
 import android.util.SparseIntArray;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.battery.metrics.core.ProcFileReader;
@@ -43,7 +44,7 @@ public class CpuFrequencyMetricsCollector extends SystemMetricsCollector<CpuFreq
 
   @Override
   @ThreadSafe(enableChecks = false)
-  public boolean getSnapshot(CpuFrequencyMetrics snapshot) {
+  public boolean getSnapshot(CpuFrequencyMetrics snapshot, @Nullable Context context) {
     checkNotNull(snapshot, "Null value passed to getSnapshot!");
     boolean hasAnyValid = false;
     for (int i = 0, cores = getTotalCores(); i < cores; i++) {

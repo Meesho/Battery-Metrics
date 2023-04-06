@@ -37,14 +37,14 @@ public class DiskMetricsCollectorTest
             .setPath(createFile("I am a weird android"), createFile("manufacturer"));
 
     DiskMetrics snapshot = new DiskMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isFalse();
+    assertThat(collector.getSnapshot(snapshot, null)).isFalse();
   }
 
   @Test
   public void testDefaultDisabled() throws Exception {
     DiskMetricsCollector collector = new DiskMetricsCollector();
     DiskMetrics snapshot = new DiskMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isFalse();
+    assertThat(collector.getSnapshot(snapshot, null)).isFalse();
     assertThat(snapshot.rcharBytes).isEqualTo(0);
     assertThat(snapshot.wcharBytes).isEqualTo(0);
   }
@@ -67,7 +67,7 @@ public class DiskMetricsCollectorTest
         new DiskMetricsCollectorWithProcFile().setPath(createFile(io), createFile(stat));
 
     DiskMetrics snapshot = new DiskMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
 
     assertThat(snapshot.rcharBytes).isEqualTo(100);
     assertThat(snapshot.wcharBytes).isEqualTo(101);
@@ -98,9 +98,9 @@ public class DiskMetricsCollectorTest
         new DiskMetricsCollectorWithProcFile().setPath(createFile(io), createFile(stat));
 
     DiskMetrics snapshot = new DiskMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
 
     assertThat(snapshot.rcharBytes).isEqualTo(100);
     assertThat(snapshot.wcharBytes).isEqualTo(101);
@@ -131,7 +131,7 @@ public class DiskMetricsCollectorTest
         new DiskMetricsCollectorWithProcFile().setPath(createFile(io), createFile(stat));
 
     DiskMetrics snapshot = new DiskMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
 
     assertThat(snapshot.rcharBytes).isEqualTo(100);
     assertThat(snapshot.wcharBytes).isEqualTo(101);

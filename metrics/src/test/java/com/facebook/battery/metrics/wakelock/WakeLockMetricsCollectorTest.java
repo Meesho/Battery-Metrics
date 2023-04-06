@@ -58,24 +58,24 @@ public class WakeLockMetricsCollectorTest
     PowerManager.WakeLock wakelockA = mPowerManager.newWakeLock(0, "testA");
     mCollector.newWakeLock(wakelockA, 0, "testA");
 
-    mCollector.getSnapshot(metrics);
+    mCollector.getSnapshot(metrics, null);
     assertThat(metrics.heldTimeMs).as("Held time at beginning").isEqualTo(0);
 
     ShadowSystemClock.setUptimeMillis(1);
     mCollector.acquire(wakelockA, -1);
 
     ShadowSystemClock.setUptimeMillis(61);
-    mCollector.getSnapshot(metrics);
+    mCollector.getSnapshot(metrics, null);
     assertThat(metrics.heldTimeMs).as("Intermediate held time").isEqualTo(60);
 
     ShadowSystemClock.setUptimeMillis(91);
     mCollector.release(wakelockA, 0);
 
-    mCollector.getSnapshot(metrics);
+    mCollector.getSnapshot(metrics, null);
     assertThat(metrics.heldTimeMs).as("Held time at release").isEqualTo(90);
 
     ShadowSystemClock.setUptimeMillis(121);
-    mCollector.getSnapshot(metrics);
+    mCollector.getSnapshot(metrics, null);
     assertThat(metrics.heldTimeMs).as("Final held time").isEqualTo(90);
   }
 
@@ -98,7 +98,7 @@ public class WakeLockMetricsCollectorTest
     mCollector.newWakeLock(wakeLockB, 0, "testB");
 
     ShadowSystemClock.setUptimeMillis(1);
-    mCollector.getSnapshot(metrics);
+    mCollector.getSnapshot(metrics, null);
     assertThat(metrics.heldTimeMs).as("Initialization").isEqualTo(0);
     assertThat(metrics.tagTimeMs.isEmpty()).isFalse();
     assertThat(metrics.tagTimeMs.get("testA")).isEqualTo(0);
@@ -106,32 +106,32 @@ public class WakeLockMetricsCollectorTest
 
     ShadowSystemClock.setUptimeMillis(1);
     mCollector.acquire(wakeLockA, -1);
-    mCollector.getSnapshot(metrics);
+    mCollector.getSnapshot(metrics, null);
     assertThat(metrics.heldTimeMs).as("Acquired A").isEqualTo(0);
 
     ShadowSystemClock.setUptimeMillis(31);
     mCollector.acquire(wakeLockB, -1);
-    mCollector.getSnapshot(metrics);
+    mCollector.getSnapshot(metrics, null);
     assertThat(metrics.heldTimeMs).as("Acquired B").isEqualTo(30);
     assertThat(metrics.tagTimeMs.get("testA")).isEqualTo(30);
     assertThat(metrics.tagTimeMs.get("testB")).isEqualTo(0);
 
     ShadowSystemClock.setUptimeMillis(61);
     mCollector.release(wakeLockB, 0);
-    mCollector.getSnapshot(metrics);
+    mCollector.getSnapshot(metrics, null);
     assertThat(metrics.heldTimeMs).as("Released B").isEqualTo(60);
     assertThat(metrics.tagTimeMs.get("testA")).isEqualTo(60);
     assertThat(metrics.tagTimeMs.get("testB")).isEqualTo(30);
 
     ShadowSystemClock.setUptimeMillis(91);
     mCollector.release(wakeLockA, 0);
-    mCollector.getSnapshot(metrics);
+    mCollector.getSnapshot(metrics, null);
     assertThat(metrics.heldTimeMs).as("Released A").isEqualTo(90);
     assertThat(metrics.tagTimeMs.get("testA")).isEqualTo(90);
     assertThat(metrics.tagTimeMs.get("testB")).isEqualTo(30);
 
     ShadowSystemClock.setUptimeMillis(121);
-    mCollector.getSnapshot(metrics);
+    mCollector.getSnapshot(metrics, null);
     assertThat(metrics.heldTimeMs).as("Final").isEqualTo(90);
     assertThat(metrics.tagTimeMs.get("testA")).isEqualTo(90);
     assertThat(metrics.tagTimeMs.get("testB")).isEqualTo(30);
@@ -143,10 +143,10 @@ public class WakeLockMetricsCollectorTest
     PowerManager.WakeLock wakeLockA = mPowerManager.newWakeLock(0, "testA");
     mCollector.newWakeLock(wakeLockA, 0, "testA");
 
-    assertThat(mCollector.getSnapshot(metrics)).isTrue();
+    assertThat(mCollector.getSnapshot(metrics, null)).isTrue();
 
     mCollector.disable();
-    assertThat(mCollector.getSnapshot(metrics)).isFalse();
+    assertThat(mCollector.getSnapshot(metrics, null)).isFalse();
 
     // Sanity check that nothing throws an exception or logs after disabling
     mCollector.release(wakeLockA, 0);
@@ -167,7 +167,7 @@ public class WakeLockMetricsCollectorTest
 
     WakeLockMetrics metricsA = new WakeLockMetrics(true);
 
-    assertThat(mCollector.getSnapshot(metricsA)).isTrue();
+    assertThat(mCollector.getSnapshot(metricsA, null)).isTrue();
     assertThat(metricsA.acquiredCount).isEqualTo(0);
     assertThat(metricsA.heldTimeMs).isEqualTo(0);
     assertThat(metricsA.tagTimeMs.size()).isEqualTo(0);
@@ -179,14 +179,14 @@ public class WakeLockMetricsCollectorTest
     mCollector.acquire(wakelock, 100);
 
     ShadowSystemClock.setUptimeMillis(51);
-    assertThat(mCollector.getSnapshot(metricsA)).isTrue();
+    assertThat(mCollector.getSnapshot(metricsA, null)).isTrue();
     assertThat(metricsA.acquiredCount).isEqualTo(1);
     assertThat(metricsA.heldTimeMs).isEqualTo(50);
     assertThat(metricsA.tagTimeMs.size()).isEqualTo(1);
     assertThat(metricsA.tagTimeMs.get("tag")).isEqualTo(50);
 
     ShadowSystemClock.setUptimeMillis(151);
-    assertThat(mCollector.getSnapshot(metricsA)).isTrue();
+    assertThat(mCollector.getSnapshot(metricsA, null)).isTrue();
     assertThat(metricsA.acquiredCount).isEqualTo(1);
     assertThat(metricsA.heldTimeMs).isEqualTo(100);
     assertThat(metricsA.tagTimeMs.size()).isEqualTo(1);
@@ -217,14 +217,14 @@ public class WakeLockMetricsCollectorTest
     mCollector.acquire(wakelock, 100);
 
     ShadowSystemClock.setUptimeMillis(51);
-    assertThat(mCollector.getSnapshot(metricsA)).isTrue();
+    assertThat(mCollector.getSnapshot(metricsA, null)).isTrue();
     assertThat(metricsA.acquiredCount).isEqualTo(1);
     assertThat(metricsA.heldTimeMs).isEqualTo(50);
     assertThat(metricsA.tagTimeMs.size()).isEqualTo(1);
     assertThat(metricsA.tagTimeMs.get("tag")).isEqualTo(50);
 
     ShadowSystemClock.setUptimeMillis(151);
-    assertThat(mCollector.getSnapshot(metricsA)).isTrue();
+    assertThat(mCollector.getSnapshot(metricsA, null)).isTrue();
     assertThat(metricsA.acquiredCount).isEqualTo(1);
     assertThat(metricsA.heldTimeMs).isEqualTo(100);
     assertThat(metricsA.tagTimeMs.size()).isEqualTo(1);
@@ -234,7 +234,7 @@ public class WakeLockMetricsCollectorTest
     wakelock.release();
     mCollector.release(wakelock, -1);
     WakeLockMetrics metricsB = new WakeLockMetrics(true);
-    assertThat(mCollector.getSnapshot(metricsB)).isTrue();
+    assertThat(mCollector.getSnapshot(metricsB, null)).isTrue();
     assertThat(metricsB).isEqualTo(metricsA);
   }
 
@@ -259,7 +259,7 @@ public class WakeLockMetricsCollectorTest
     mCollector.acquire(wakelock, -1);
 
     ShadowSystemClock.setUptimeMillis(151);
-    assertThat(mCollector.getSnapshot(snapshot)).isTrue();
+    assertThat(mCollector.getSnapshot(snapshot, null)).isTrue();
     assertThat(snapshot.acquiredCount).isEqualTo(1);
     assertThat(snapshot.heldTimeMs).isEqualTo(100);
 
@@ -267,7 +267,7 @@ public class WakeLockMetricsCollectorTest
     mCollector.release(wakelock, -1);
 
     ShadowSystemClock.setUptimeMillis(201);
-    assertThat(mCollector.getSnapshot(snapshot)).isTrue();
+    assertThat(mCollector.getSnapshot(snapshot, null)).isTrue();
     assertThat(snapshot.acquiredCount).isEqualTo(1);
     assertThat(snapshot.heldTimeMs).isEqualTo(100);
 
@@ -275,7 +275,7 @@ public class WakeLockMetricsCollectorTest
     mCollector.release(wakelock, -1);
 
     ShadowSystemClock.setUptimeMillis(251);
-    assertThat(mCollector.getSnapshot(snapshot)).isTrue();
+    assertThat(mCollector.getSnapshot(snapshot, null)).isTrue();
     assertThat(snapshot.acquiredCount).isEqualTo(1);
     assertThat(snapshot.heldTimeMs).isEqualTo(100);
   }

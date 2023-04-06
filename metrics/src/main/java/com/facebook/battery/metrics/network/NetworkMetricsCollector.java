@@ -21,6 +21,8 @@ import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ThreadSafe;
 import java.util.Arrays;
 
+import javax.annotation.Nullable;
+
 /**
  * Records data transferred by the current application, broken down by type of network (radio vs
  * wifi) and bytes received and transmitted.
@@ -49,7 +51,7 @@ public class NetworkMetricsCollector extends SystemMetricsCollector<NetworkMetri
 
   @Override
   @ThreadSafe(enableChecks = false)
-  public synchronized boolean getSnapshot(NetworkMetrics snapshot) {
+  public synchronized boolean getSnapshot(NetworkMetrics snapshot, @Nullable Context context) {
     // Once the value has decreased, the underlying value has almost certainly reset and all current
     // snapshots are invalidated. Disable this collector.
     if (!mIsValid || !mCollector.getTotalBytes(mBytes)) {
@@ -104,5 +106,9 @@ public class NetworkMetricsCollector extends SystemMetricsCollector<NetworkMetri
   @Override
   public NetworkMetrics createMetrics() {
     return new NetworkMetrics();
+  }
+
+  public void cleanUp(Context context) {
+      mCollector.cleanUp(context);
   }
 }

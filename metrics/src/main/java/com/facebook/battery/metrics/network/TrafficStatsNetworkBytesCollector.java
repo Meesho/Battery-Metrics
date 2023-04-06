@@ -16,6 +16,8 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.battery.metrics.core.VisibleToAvoidSynthetics;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -105,5 +107,11 @@ class TrafficStatsNetworkBytesCollector extends NetworkBytesCollector {
 
     mTotalBytes[TX | prefix] += currentTotalTxBytes - lastTotalTxBytes;
     mTotalBytes[RX | prefix] += currentTotalRxBytes - lastTotalRxBytes;
+  }
+
+  @Override
+  public void cleanUp(@NonNull Context context) {
+    super.cleanUp(context);
+    context.unregisterReceiver(mReceiver);
   }
 }

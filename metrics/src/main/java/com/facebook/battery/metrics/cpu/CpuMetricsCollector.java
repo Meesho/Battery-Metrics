@@ -9,12 +9,16 @@ package com.facebook.battery.metrics.cpu;
 
 import static com.facebook.battery.metrics.core.Utilities.checkNotNull;
 
+import android.content.Context;
+
 import androidx.annotation.VisibleForTesting;
 import com.facebook.battery.metrics.core.ProcFileReader;
 import com.facebook.battery.metrics.core.SystemMetricsCollector;
 import com.facebook.battery.metrics.core.SystemMetricsLogger;
 import com.facebook.battery.metrics.core.VisibleToAvoidSynthetics;
 import com.facebook.infer.annotation.ThreadSafe;
+
+import javax.annotation.Nullable;
 
 /**
  * Collects data about cpu metrics.
@@ -44,7 +48,7 @@ public class CpuMetricsCollector extends SystemMetricsCollector<CpuMetrics> {
 
   @Override
   @ThreadSafe(enableChecks = false)
-  public boolean getSnapshot(CpuMetrics snapshot) {
+  public boolean getSnapshot(CpuMetrics snapshot, @Nullable Context context) {
     checkNotNull(snapshot, "Null value passed to getSnapshot!");
 
     try {

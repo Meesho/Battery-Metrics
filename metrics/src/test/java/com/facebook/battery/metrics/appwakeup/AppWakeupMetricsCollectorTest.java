@@ -47,7 +47,7 @@ public class AppWakeupMetricsCollectorTest
         AppWakeupMetrics.WakeupReason.JOB_SCHEDULER, "key3");
     ShadowSystemClock.setElapsedRealtime(4);
     mAppWakeupMetricsCollector.recordWakeupStart(AppWakeupMetrics.WakeupReason.ALARM, "key4");
-    mAppWakeupMetricsCollector.getSnapshot(mAppWakeupMetrics);
+    mAppWakeupMetricsCollector.getSnapshot(mAppWakeupMetrics, null);
     assertThat(mAppWakeupMetrics.appWakeups.size()).isEqualTo(0);
 
     // Test with 2 wakeups closed and 2 open
@@ -56,7 +56,7 @@ public class AppWakeupMetricsCollectorTest
     ShadowSystemClock.setElapsedRealtime(30);
     mAppWakeupMetricsCollector.recordWakeupEnd("key3");
     ShadowSystemClock.setElapsedRealtime(35);
-    mAppWakeupMetricsCollector.getSnapshot(mAppWakeupMetrics);
+    mAppWakeupMetricsCollector.getSnapshot(mAppWakeupMetrics, null);
     assertThat(mAppWakeupMetrics.appWakeups.size()).isEqualTo(2);
     assertThat(mAppWakeupMetrics.appWakeups.get("key1"))
         .isEqualTo(new WakeupDetails(WakeupReason.ALARM, 1, 19));
@@ -71,7 +71,7 @@ public class AppWakeupMetricsCollectorTest
     ShadowSystemClock.setElapsedRealtime(57);
     mAppWakeupMetricsCollector.recordWakeupEnd("key2");
 
-    mAppWakeupMetricsCollector.getSnapshot(mAppWakeupMetrics);
+    mAppWakeupMetricsCollector.getSnapshot(mAppWakeupMetrics, null);
     assertThat(mAppWakeupMetrics.appWakeups.size()).isEqualTo(3);
     assertThat(mAppWakeupMetrics.appWakeups.get("key1"))
         .isEqualTo(new WakeupDetails(WakeupReason.ALARM, 2, 28));
@@ -85,7 +85,7 @@ public class AppWakeupMetricsCollectorTest
     mAppWakeupMetricsCollector.recordWakeupStart(AppWakeupMetrics.WakeupReason.ALARM, "key4");
     ShadowSystemClock.setElapsedRealtime(65);
     mAppWakeupMetricsCollector.recordWakeupEnd("key1");
-    mAppWakeupMetricsCollector.getSnapshot(mAppWakeupMetrics);
+    mAppWakeupMetricsCollector.getSnapshot(mAppWakeupMetrics, null);
     assertThat(mAppWakeupMetrics.appWakeups.size()).isEqualTo(3);
     assertThat(mAppWakeupMetrics.appWakeups.get("key1"))
         .isEqualTo(new WakeupDetails(WakeupReason.ALARM, 2, 28));

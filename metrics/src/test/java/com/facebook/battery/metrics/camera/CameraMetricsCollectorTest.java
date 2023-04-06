@@ -37,10 +37,10 @@ public class CameraMetricsCollectorTest
     CameraMetricsCollector collector = new CameraMetricsCollector();
 
     collector.recordCameraOpen(testCamera);
-    assertThat(collector.getSnapshot(metrics)).isTrue();
+    assertThat(collector.getSnapshot(metrics, null)).isTrue();
 
     collector.disable();
-    assertThat(collector.getSnapshot(metrics)).isFalse();
+    assertThat(collector.getSnapshot(metrics, null)).isFalse();
 
     // Sanity check no exceptions after disabling
     collector.recordPreviewStop(testCamera);
@@ -59,7 +59,7 @@ public class CameraMetricsCollectorTest
     collector.recordCameraClose(testCamera);
 
     CameraMetrics snapshot = new CameraMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
     assertThat(snapshot.cameraOpenTimeMs).isEqualTo(800);
     assertThat(snapshot.cameraPreviewTimeMs).isEqualTo(0);
   }
@@ -75,7 +75,7 @@ public class CameraMetricsCollectorTest
     collector.recordPreviewStop(testCamera);
 
     CameraMetrics snapshot = new CameraMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
     assertThat(snapshot.cameraOpenTimeMs).isEqualTo(0);
     assertThat(snapshot.cameraPreviewTimeMs).isEqualTo(300);
   }
@@ -89,7 +89,7 @@ public class CameraMetricsCollectorTest
 
     ShadowSystemClock.setUptimeMillis(1000);
     CameraMetrics snapshot = new CameraMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
     assertThat(snapshot.cameraOpenTimeMs).isEqualTo(500);
     assertThat(snapshot.cameraPreviewTimeMs).isEqualTo(0);
   }
@@ -103,7 +103,7 @@ public class CameraMetricsCollectorTest
 
     ShadowSystemClock.setUptimeMillis(1000);
     CameraMetrics snapshot = new CameraMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
     assertThat(snapshot.cameraOpenTimeMs).isEqualTo(0);
     assertThat(snapshot.cameraPreviewTimeMs).isEqualTo(300);
   }
@@ -128,7 +128,7 @@ public class CameraMetricsCollectorTest
     collector.recordCameraError(testCamera);
 
     CameraMetrics snapshot = new CameraMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
     assertThat(snapshot.cameraOpenTimeMs).isEqualTo(800);
     assertThat(snapshot.cameraPreviewTimeMs).isEqualTo(0);
   }
@@ -158,7 +158,7 @@ public class CameraMetricsCollectorTest
     collector.recordPreviewStop(testCamera);
 
     CameraMetrics snapshot = new CameraMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
     assertThat(snapshot.cameraOpenTimeMs).isEqualTo(800);
     assertThat(snapshot.cameraPreviewTimeMs).isEqualTo(300);
   }
@@ -184,7 +184,7 @@ public class CameraMetricsCollectorTest
     collector.recordCameraClose(testCamera);
 
     CameraMetrics snapshot = new CameraMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
     assertThat(snapshot.cameraOpenTimeMs).isEqualTo(0);
     assertThat(snapshot.cameraPreviewTimeMs).isEqualTo(0);
   }

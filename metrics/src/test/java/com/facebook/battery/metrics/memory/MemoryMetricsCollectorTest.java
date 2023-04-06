@@ -39,8 +39,8 @@ public class MemoryMetricsCollectorTest
             .setPath(createFile("I am a weird android manufacturer"));
 
     MemoryMetrics snapshot = new MemoryMetrics();
-    collector.getSnapshot(snapshot);
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    collector.getSnapshot(snapshot, null);
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
 
     assertThat(snapshot.vmSizeKb).isEqualTo(-1);
     assertThat(snapshot.vmRssKb).isEqualTo(-1);
@@ -53,7 +53,7 @@ public class MemoryMetricsCollectorTest
         new MemoryMetricsCollectorWithProcFile().setPath(createFile(statm));
 
     MemoryMetrics snapshot = new MemoryMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
 
     assertThat(snapshot.vmSizeKb).isEqualTo(16);
     assertThat(snapshot.vmRssKb).isEqualTo(8);
@@ -66,9 +66,9 @@ public class MemoryMetricsCollectorTest
 
     MemoryMetrics snapshot = new MemoryMetrics();
     MemoryMetricsCollector collector = new MemoryMetricsCollector();
-    collector.getSnapshot(snapshot);
+    collector.getSnapshot(snapshot, null);
 
-    assertThat(collector.getSnapshot(snapshot)).isFalse();
+    assertThat(collector.getSnapshot(snapshot, null)).isFalse();
     assertThat(snapshot.nativeHeapSizeKb).isEqualTo(0);
     assertThat(snapshot.nativeHeapAllocatedKb).isEqualTo(0);
   }
@@ -81,7 +81,7 @@ public class MemoryMetricsCollectorTest
     MemoryMetrics snapshot = new MemoryMetrics();
     MemoryMetricsCollector collector = new MemoryMetricsCollector();
     collector.enable();
-    collector.getSnapshot(snapshot);
+    collector.getSnapshot(snapshot, null);
 
     assertThat(snapshot.nativeHeapSizeKb).isEqualTo(4);
     assertThat(snapshot.nativeHeapAllocatedKb).isEqualTo(3);
@@ -95,8 +95,8 @@ public class MemoryMetricsCollectorTest
     MemoryMetrics first = new MemoryMetrics();
     MemoryMetrics second = new MemoryMetrics();
 
-    collector.getSnapshot(first);
-    collector.getSnapshot(second);
+    collector.getSnapshot(first, null);
+    collector.getSnapshot(second, null);
 
     assertThat(first.sequenceNumber).isEqualTo(1);
     assertThat(second.sequenceNumber).isEqualTo(2);
@@ -113,11 +113,11 @@ public class MemoryMetricsCollectorTest
 
     ShadowDebug.setNativeHeapSize(4 * 1024);
     ShadowDebug.setNativeHeapAllocatedSize(3 * 1024);
-    collector.getSnapshot(first);
+    collector.getSnapshot(first, null);
 
     ShadowDebug.setNativeHeapSize(8 * 1024);
     ShadowDebug.setNativeHeapAllocatedSize(6 * 1024);
-    collector.getSnapshot(second);
+    collector.getSnapshot(second, null);
 
     first.sum(second, output);
     assertThat(output.nativeHeapSizeKb).isEqualTo(8);
@@ -135,11 +135,11 @@ public class MemoryMetricsCollectorTest
 
     ShadowDebug.setNativeHeapSize(4 * 1024);
     ShadowDebug.setNativeHeapAllocatedSize(3 * 1024);
-    collector.getSnapshot(first);
+    collector.getSnapshot(first, null);
 
     ShadowDebug.setNativeHeapSize(8 * 1024);
     ShadowDebug.setNativeHeapAllocatedSize(6 * 1024);
-    collector.getSnapshot(second);
+    collector.getSnapshot(second, null);
 
     second.sum(first, output);
     assertThat(output.nativeHeapSizeKb).isEqualTo(8);
@@ -155,7 +155,7 @@ public class MemoryMetricsCollectorTest
     collector.enable();
     MemoryMetrics snapshot = new MemoryMetrics();
 
-    collector.getSnapshot(snapshot);
+    collector.getSnapshot(snapshot, null);
     assertThat(snapshot.javaHeapMaxSizeKb).isEqualTo(8);
     assertThat(snapshot.nativeHeapAllocatedKb).isEqualTo(6);
   }

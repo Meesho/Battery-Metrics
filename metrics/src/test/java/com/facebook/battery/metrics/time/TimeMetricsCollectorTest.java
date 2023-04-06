@@ -26,7 +26,7 @@ public class TimeMetricsCollectorTest
     ShadowSystemClock.setElapsedRealtime(9876);
     TimeMetrics snapshot = new TimeMetrics();
     TimeMetricsCollector collector = new TimeMetricsCollector();
-    collector.getSnapshot(snapshot);
+    collector.getSnapshot(snapshot, null);
 
     assertThat(snapshot.uptimeMs).isEqualTo(1234);
     assertThat(snapshot.realtimeMs).isEqualTo(9876);

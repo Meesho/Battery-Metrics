@@ -48,7 +48,7 @@ public class CpuFrequencyMetricsCollectorTest
             });
 
     CpuFrequencyMetrics metrics = collector.createMetrics();
-    assertThat(collector.getSnapshot(metrics)).isTrue();
+    assertThat(collector.getSnapshot(metrics, null)).isTrue();
 
     assertThat(metrics.timeInStateS.length).isEqualTo(4);
     assertThat(metrics.timeInStateS[0].size()).isEqualTo(2);
@@ -76,7 +76,7 @@ public class CpuFrequencyMetricsCollectorTest
             });
 
     CpuFrequencyMetrics metrics = collector.createMetrics();
-    assertThat(collector.getSnapshot(metrics)).isTrue();
+    assertThat(collector.getSnapshot(metrics, null)).isTrue();
 
     assertThat(metrics.timeInStateS.length).isEqualTo(4);
     assertThat(metrics.timeInStateS[0].size()).isEqualTo(1);
@@ -97,7 +97,7 @@ public class CpuFrequencyMetricsCollectorTest
             });
 
     CpuFrequencyMetrics metrics = collector.createMetrics();
-    assertThat(collector.getSnapshot(metrics)).isTrue();
+    assertThat(collector.getSnapshot(metrics, null)).isTrue();
 
     assertThat(metrics.timeInStateS.length).isEqualTo(4);
     assertThat(metrics.timeInStateS[0].size()).isEqualTo(0);
@@ -110,7 +110,7 @@ public class CpuFrequencyMetricsCollectorTest
             new String[] {"everything", "is", "horribly", "broken"});
 
     CpuFrequencyMetrics metrics = collector.createMetrics();
-    assertThat(collector.getSnapshot(metrics)).isFalse();
+    assertThat(collector.getSnapshot(metrics, null)).isFalse();
   }
 
   private String createFile(String contents) throws IOException {

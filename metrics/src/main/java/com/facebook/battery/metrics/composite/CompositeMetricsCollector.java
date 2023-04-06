@@ -9,11 +9,15 @@ package com.facebook.battery.metrics.composite;
 
 import static com.facebook.battery.metrics.core.Utilities.checkNotNull;
 
+import android.content.Context;
+
 import androidx.collection.SimpleArrayMap;
 import com.facebook.battery.metrics.core.SystemMetrics;
 import com.facebook.battery.metrics.core.SystemMetricsCollector;
 import com.facebook.battery.metrics.core.VisibleToAvoidSynthetics;
 import com.facebook.infer.annotation.ThreadSafe;
+
+import javax.annotation.Nullable;
 
 /**
  * Composite metrics collector allows batching and using several Metrics Collectors together, keyed
@@ -81,11 +85,12 @@ public class CompositeMetricsCollector extends SystemMetricsCollector<CompositeM
    * collectors are expected to report any errors they might encounter.
    *
    * @param snapshot snapshot to reuse
+   * @param context
    * @return whether _any_ underlying snapshot succeeded
    */
   @Override
   @ThreadSafe(enableChecks = false)
-  public boolean getSnapshot(CompositeMetrics snapshot) {
+  public boolean getSnapshot(CompositeMetrics snapshot, @Nullable Context context) {
     checkNotNull(snapshot, "Null value passed to getSnapshot!");
     boolean result = false;
     SimpleArrayMap<Class<? extends SystemMetrics>, SystemMetrics> snapshotMetrics =
@@ -96,7 +101,7 @@ public class CompositeMetricsCollector extends SystemMetricsCollector<CompositeM
       boolean snapshotResult = false;
       if (collector != null) {
         SystemMetrics metric = snapshot.getMetric(metricsClass);
-        snapshotResult = collector.getSnapshot(metric);
+        snapshotResult = collector.getSnapshot(metric, null);
       }
       snapshot.setIsValid(metricsClass, snapshotResult);
       result |= snapshotResult;

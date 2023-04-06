@@ -20,7 +20,7 @@ public abstract class SystemMetricsCollectorTest<
   public void testNullSnapshot() throws Exception {
     mExpectedException.expect(IllegalArgumentException.class);
     T instance = getClazz().newInstance();
-    instance.getSnapshot(null);
+    instance.getSnapshot(null, null);
   }
 
   protected abstract Class<T> getClazz();

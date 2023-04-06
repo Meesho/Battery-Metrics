@@ -15,6 +15,8 @@ import com.facebook.battery.metrics.core.SystemMetricsCollector;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ThreadSafe;
 
+import javax.annotation.Nullable;
+
 /**
  * Alternative to {@link NetworkMetricsCollector} which supports distinguishing
  * foreground/background app states where possible (in particular when using qtaguid stats).
@@ -36,7 +38,7 @@ public class EnhancedNetworkMetricsCollector
 
   @Override
   @ThreadSafe(enableChecks = false)
-  public synchronized boolean getSnapshot(EnhancedNetworkMetrics snapshot) {
+  public synchronized boolean getSnapshot(EnhancedNetworkMetrics snapshot, @Nullable Context context) {
     if (!mIsValid || !mCollector.getTotalBytes(mBytes)) {
       return false;
     }
