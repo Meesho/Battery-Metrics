@@ -9,6 +9,8 @@ package com.facebook.battery.metrics.composite;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
+import android.content.Context;
+
 import androidx.annotation.Nullable;
 import com.facebook.battery.metrics.core.SystemMetrics;
 import com.facebook.battery.metrics.core.SystemMetricsCollector;
@@ -45,7 +47,7 @@ public class CompositeMetricsCollectorTest {
   @Test
   public void testNullSnapshot() {
     mExpectedException.expect(IllegalArgumentException.class);
-    mCollector.getSnapshot(null);
+    mCollector.getSnapshot(null, null);
   }
 
   @Test
@@ -55,7 +57,7 @@ public class CompositeMetricsCollectorTest {
     mBCollector.succeeds = true;
     mBCollector.currentValue = 120;
 
-    assertThat(mCollector.getSnapshot(mMetrics)).isTrue();
+    assertThat(mCollector.getSnapshot(mMetrics, null)).isTrue();
     assertThat(mMetrics.getMetrics().size()).isEqualTo(2);
     assertThat(mMetrics.getMetric(A.class).value).isEqualTo(100);
     assertThat(mMetrics.isValid(A.class)).isEqualTo(true);
@@ -69,7 +71,7 @@ public class CompositeMetricsCollectorTest {
     mACollector.currentValue = 100;
     mBCollector.succeeds = false;
 
-    assertThat(mCollector.getSnapshot(mMetrics)).isTrue();
+    assertThat(mCollector.getSnapshot(mMetrics, null)).isTrue();
     assertThat(mMetrics.getMetrics().size()).isEqualTo(2);
     assertThat(mMetrics.getMetric(A.class).value).isEqualTo(100);
     assertThat(mMetrics.isValid(A.class)).isEqualTo(true);
@@ -81,7 +83,7 @@ public class CompositeMetricsCollectorTest {
     mACollector.succeeds = false;
     mBCollector.succeeds = false;
 
-    assertThat(mCollector.getSnapshot(mMetrics)).isFalse();
+    assertThat(mCollector.getSnapshot(mMetrics, null)).isFalse();
     assertThat(mMetrics.getMetrics().size()).isEqualTo(2);
     assertThat(mMetrics.isValid(A.class)).isEqualTo(false);
     assertThat(mMetrics.isValid(B.class)).isEqualTo(false);
@@ -92,9 +94,9 @@ public class CompositeMetricsCollectorTest {
     mACollector.currentValue = 100;
     mACollector.succeeds = true;
     CompositeMetrics m = new CompositeMetrics().putMetric(A.class, new A());
-    mCollector.getSnapshot(m);
+    mCollector.getSnapshot(m, null);
 
-    assertThat(mCollector.getSnapshot(m)).isTrue();
+    assertThat(mCollector.getSnapshot(m, null)).isTrue();
     assertThat(m.getMetrics().size()).isEqualTo(1);
     assertThat(m.getMetric(A.class).value).isEqualTo(100);
     assertThat(m.isValid(A.class)).isEqualTo(true);
@@ -108,9 +110,9 @@ public class CompositeMetricsCollectorTest {
     mACollector.succeeds = true;
     CompositeMetrics m =
         new CompositeMetrics().putMetric(A.class, new A()).putMetric(C.class, new C());
-    mCollector.getSnapshot(m);
+    mCollector.getSnapshot(m, null);
 
-    assertThat(mCollector.getSnapshot(m)).isTrue();
+    assertThat(mCollector.getSnapshot(m, null)).isTrue();
     assertThat(m.getMetrics().size()).isEqualTo(2);
     assertThat(m.getMetric(A.class).value).isEqualTo(100);
     assertThat(m.isValid(A.class)).isEqualTo(true);
@@ -171,7 +173,7 @@ class ACollector extends SystemMetricsCollector<A> {
   boolean succeeds = true;
 
   @Override
-  public boolean getSnapshot(A snapshot) {
+  public boolean getSnapshot(A snapshot, @javax.annotation.Nullable Context context) {
     snapshot.value = currentValue;
     return succeeds;
   }
@@ -188,7 +190,7 @@ class BCollector extends SystemMetricsCollector<B> {
   boolean succeeds = true;
 
   @Override
-  public boolean getSnapshot(B snapshot) {
+  public boolean getSnapshot(B snapshot, @javax.annotation.Nullable Context context) {
     snapshot.value = currentValue;
     return succeeds;
   }

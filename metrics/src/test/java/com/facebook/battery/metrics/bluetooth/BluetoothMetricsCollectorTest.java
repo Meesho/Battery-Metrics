@@ -39,7 +39,7 @@ public class BluetoothMetricsCollectorTest
     ScanCallback callback = mock(ScanCallback.class);
 
     // Zero at beginning
-    boolean isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics);
+    boolean isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics, null);
     assertThat(isSuccess).isTrue();
     assertThat(bluetoothMetrics.bleScanCount).isEqualTo(0);
     assertThat(bluetoothMetrics.bleScanDurationMs).isEqualTo(0);
@@ -50,7 +50,7 @@ public class BluetoothMetricsCollectorTest
 
     // Intermediate snapshot
     ShadowSystemClock.setUptimeMillis(21);
-    isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics);
+    isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics, null);
     assertThat(isSuccess).isTrue();
     assertThat(bluetoothMetrics.bleScanCount).isEqualTo(1);
     assertThat(bluetoothMetrics.bleScanDurationMs).isEqualTo(20);
@@ -60,14 +60,14 @@ public class BluetoothMetricsCollectorTest
     mBluetoothMetricsCollector.stopScan(callback);
 
     // Snapshot at stop
-    isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics);
+    isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics, null);
     assertThat(isSuccess).isTrue();
     assertThat(bluetoothMetrics.bleScanCount).isEqualTo(1);
     assertThat(bluetoothMetrics.bleScanDurationMs).isEqualTo(50);
 
     // Snapshot after stop
     ShadowSystemClock.setUptimeMillis(61);
-    isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics);
+    isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics, null);
     assertThat(isSuccess).isTrue();
     assertThat(bluetoothMetrics.bleScanCount).isEqualTo(1);
     assertThat(bluetoothMetrics.bleScanDurationMs).isEqualTo(50);
@@ -82,7 +82,7 @@ public class BluetoothMetricsCollectorTest
     ScanCallback callback = mock(ScanCallback.class);
 
     // Zero at beginning
-    boolean isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics);
+    boolean isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics, null);
     assertThat(isSuccess).isTrue();
     assertThat(bluetoothMetrics.bleOpportunisticScanCount).isEqualTo(0);
     assertThat(bluetoothMetrics.bleOpportunisticScanDurationMs).isEqualTo(0);
@@ -93,7 +93,7 @@ public class BluetoothMetricsCollectorTest
 
     // Intermediate snapshot
     ShadowSystemClock.setUptimeMillis(21);
-    isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics);
+    isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics, null);
     assertThat(isSuccess).isTrue();
     assertThat(bluetoothMetrics.bleOpportunisticScanCount).isEqualTo(1);
     assertThat(bluetoothMetrics.bleOpportunisticScanDurationMs).isEqualTo(20);
@@ -103,14 +103,14 @@ public class BluetoothMetricsCollectorTest
     mBluetoothMetricsCollector.stopScan(callback);
 
     // Snapshot at stop
-    isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics);
+    isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics, null);
     assertThat(isSuccess).isTrue();
     assertThat(bluetoothMetrics.bleOpportunisticScanCount).isEqualTo(1);
     assertThat(bluetoothMetrics.bleOpportunisticScanDurationMs).isEqualTo(50);
 
     // Snapshot after stop
     ShadowSystemClock.setUptimeMillis(61);
-    isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics);
+    isSuccess = mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics, null);
     assertThat(isSuccess).isTrue();
     assertThat(bluetoothMetrics.bleOpportunisticScanCount).isEqualTo(1);
     assertThat(bluetoothMetrics.bleOpportunisticScanDurationMs).isEqualTo(50);
@@ -150,7 +150,7 @@ public class BluetoothMetricsCollectorTest
     mBluetoothMetricsCollector.stopScan(callbackC);
 
     // Intermediate snapshot
-    mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics);
+    mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics, null);
     assertThat(bluetoothMetrics.bleScanCount).isEqualTo(2);
     assertThat(bluetoothMetrics.bleScanDurationMs).isEqualTo(8 - 2);
     assertThat(bluetoothMetrics.bleOpportunisticScanCount).isEqualTo(1);
@@ -164,7 +164,7 @@ public class BluetoothMetricsCollectorTest
 
     // Final snapshot
     ShadowSystemClock.setUptimeMillis(64);
-    mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics);
+    mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics, null);
     assertThat(bluetoothMetrics.bleScanCount).isEqualTo(2);
     assertThat(bluetoothMetrics.bleScanDurationMs).isEqualTo(16 - 2);
     assertThat(bluetoothMetrics.bleOpportunisticScanCount).isEqualTo(1);
@@ -192,7 +192,7 @@ public class BluetoothMetricsCollectorTest
     ShadowSystemClock.setUptimeMillis(128);
 
     BluetoothMetrics bluetoothMetrics = new BluetoothMetrics();
-    mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics);
+    mBluetoothMetricsCollector.getSnapshot(bluetoothMetrics, null);
     assertThat(bluetoothMetrics.bleScanCount).isEqualTo(1);
     assertThat(bluetoothMetrics.bleScanDurationMs).isEqualTo(32 - 2);
     assertThat(bluetoothMetrics.bleOpportunisticScanCount).isEqualTo(0);

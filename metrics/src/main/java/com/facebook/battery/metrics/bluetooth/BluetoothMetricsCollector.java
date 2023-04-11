@@ -12,12 +12,15 @@ import static com.facebook.battery.metrics.core.Utilities.checkNotNull;
 import android.app.PendingIntent;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
+import android.content.Context;
 import android.os.SystemClock;
 import android.util.SparseArray;
 import androidx.annotation.GuardedBy;
 import com.facebook.battery.metrics.core.SystemMetricsCollector;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ThreadSafe;
+
+import javax.annotation.Nullable;
 
 /**
  * Records information about Bluetooth LE scans, meant to be used with {@link BluetoothLeScanner}.
@@ -55,7 +58,7 @@ public class BluetoothMetricsCollector extends SystemMetricsCollector<BluetoothM
   private final ScanMetrics mOpportunisticScan = new ScanMetrics();
 
   @Override
-  public synchronized boolean getSnapshot(BluetoothMetrics snapshot) {
+  public synchronized boolean getSnapshot(BluetoothMetrics snapshot, @Nullable Context context) {
     checkNotNull(snapshot, "Null value passed to getSnapshot!");
     snapshot.bleScanCount = mNonOpportunisticScan.count;
     snapshot.bleOpportunisticScanCount = mOpportunisticScan.count;

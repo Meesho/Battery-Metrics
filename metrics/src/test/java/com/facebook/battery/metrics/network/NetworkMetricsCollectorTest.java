@@ -53,7 +53,7 @@ public class NetworkMetricsCollectorTest {
     mBytesCollector.yieldTotalBytes(bytes);
 
     NetworkMetrics metrics = mMetricsCollector.createMetrics();
-    boolean hasMetrics = mMetricsCollector.getSnapshot(metrics);
+    boolean hasMetrics = mMetricsCollector.getSnapshot(metrics, null);
     assertThat(hasMetrics).isTrue();
 
     NetworkMetrics expected = new NetworkMetrics();
@@ -72,7 +72,7 @@ public class NetworkMetricsCollectorTest {
     mBytesCollector.yieldTotalBytes(bytes);
 
     NetworkMetrics metrics = mMetricsCollector.createMetrics();
-    boolean hasMetrics = mMetricsCollector.getSnapshot(metrics);
+    boolean hasMetrics = mMetricsCollector.getSnapshot(metrics, null);
     assertThat(hasMetrics).isTrue();
 
     NetworkMetrics expected = new NetworkMetrics();
@@ -91,19 +91,19 @@ public class NetworkMetricsCollectorTest {
     mBytesCollector.yieldTotalBytes(bytes);
 
     NetworkMetrics metrics = mMetricsCollector.createMetrics();
-    assertThat(mMetricsCollector.getSnapshot(metrics)).isTrue();
+    assertThat(mMetricsCollector.getSnapshot(metrics, null)).isTrue();
 
     bytes[MOBILE | TX | FG] = 90;
     mBytesCollector.yieldTotalBytes(bytes);
 
-    assertThat(mMetricsCollector.getSnapshot(metrics)).isFalse();
+    assertThat(mMetricsCollector.getSnapshot(metrics, null)).isFalse();
     verify(logger, times(1)).wtf(anyString(), anyString(), (Throwable) any());
-    assertThat(mMetricsCollector.getSnapshot(metrics)).isFalse();
+    assertThat(mMetricsCollector.getSnapshot(metrics, null)).isFalse();
 
     // Validate that any further snapshots, even if increasing, are disabled
     bytes[MOBILE | TX | FG] = 1000;
     mBytesCollector.yieldTotalBytes(bytes);
-    assertThat(mMetricsCollector.getSnapshot(metrics)).isFalse();
+    assertThat(mMetricsCollector.getSnapshot(metrics, null)).isFalse();
 
     // No new error logged because we've given up on this user session
     verify(logger, times(1)).wtf(anyString(), anyString(), (Throwable) any());

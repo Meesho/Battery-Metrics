@@ -97,7 +97,7 @@ public class MainActivity extends Activity {
   }
 
   private void updateContent() {
-    mCollector.getSnapshot(mMetrics);
+    mCollector.getSnapshot(mMetrics, this);
     String text = "Snapshot at " + SystemClock.elapsedRealtime() + ":\n\n" + mMetrics.toString();
     mContent.setText(text);
     Log.d("BatteryMetrics", text);

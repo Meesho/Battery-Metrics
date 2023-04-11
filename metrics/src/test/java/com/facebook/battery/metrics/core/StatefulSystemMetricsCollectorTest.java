@@ -9,9 +9,13 @@ package com.facebook.battery.metrics.core;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
+import android.content.Context;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+
+import javax.annotation.Nullable;
 
 /** Sanity check swapping in {@link StatefulSystemMetricsCollector} */
 @RunWith(RobolectricTestRunner.class)
@@ -94,7 +98,7 @@ class DummyMetricCollector extends SystemMetricsCollector<DummyMetric> {
   int currentValue;
 
   @Override
-  public boolean getSnapshot(DummyMetric snapshot) {
+  public boolean getSnapshot(DummyMetric snapshot, @Nullable Context context) {
     snapshot.value = currentValue;
     return true;
   }

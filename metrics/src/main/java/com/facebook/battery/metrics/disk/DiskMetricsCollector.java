@@ -9,6 +9,8 @@ package com.facebook.battery.metrics.disk;
 
 import static com.facebook.battery.metrics.core.Utilities.checkNotNull;
 
+import android.content.Context;
+
 import androidx.annotation.GuardedBy;
 import com.facebook.battery.metrics.core.ProcFileReader;
 import com.facebook.battery.metrics.core.SystemMetricsCollector;
@@ -16,6 +18,8 @@ import com.facebook.battery.metrics.core.SystemMetricsLogger;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ThreadSafe;
 import java.nio.CharBuffer;
+
+import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
@@ -37,7 +41,7 @@ public class DiskMetricsCollector extends SystemMetricsCollector<DiskMetrics> {
 
   @Override
   @ThreadSafe(enableChecks = false)
-  public synchronized boolean getSnapshot(DiskMetrics snapshot) {
+  public synchronized boolean getSnapshot(DiskMetrics snapshot, @Nullable Context context) {
     checkNotNull(snapshot, "Null value passed to getSnapshot!");
     if (!mIsEnabled) {
       return false;

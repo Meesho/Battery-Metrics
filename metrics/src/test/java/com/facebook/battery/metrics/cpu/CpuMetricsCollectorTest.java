@@ -43,7 +43,7 @@ public class CpuMetricsCollectorTest
         new TestableCpuMetricsCollector().setPath(createFile("I am a weird android manufacturer"));
 
     CpuMetrics snapshot = new CpuMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isFalse();
+    assertThat(collector.getSnapshot(snapshot, null)).isFalse();
   }
 
   @Test
@@ -56,7 +56,7 @@ public class CpuMetricsCollectorTest
         new TestableCpuMetricsCollector().setPath(createFile(testStringBuilder.toString()));
 
     CpuMetrics snapshot = new CpuMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isFalse();
+    assertThat(collector.getSnapshot(snapshot, null)).isFalse();
   }
 
   @Test
@@ -71,7 +71,7 @@ public class CpuMetricsCollectorTest
     String path = createFile(initialEntry.toString());
     TestableCpuMetricsCollector collector = new TestableCpuMetricsCollector().setPath(path);
     CpuMetrics snapshot = new CpuMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
     verify(logger, never()).wtf(anyString(), anyString(), (Throwable) any());
 
     StringBuilder secondEntry = new StringBuilder();
@@ -79,7 +79,7 @@ public class CpuMetricsCollectorTest
       secondEntry.append(i * 1000).append(' ');
     }
     overwriteFile(new File(path), secondEntry.toString());
-    assertThat(collector.getSnapshot(snapshot)).isFalse();
+    assertThat(collector.getSnapshot(snapshot, null)).isFalse();
     verify(logger, times(1)).wtf(anyString(), anyString(), (Throwable) any());
   }
 
@@ -91,7 +91,7 @@ public class CpuMetricsCollectorTest
         new TestableCpuMetricsCollector().setPath(createFile(stat));
 
     CpuMetrics snapshot = new CpuMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
 
     assertThat(snapshot.userTimeS).isEqualTo(9852.0 / 100);
     assertThat(snapshot.systemTimeS).isEqualTo(889.0 / 100);
@@ -109,7 +109,7 @@ public class CpuMetricsCollectorTest
         new TestableCpuMetricsCollector().setPath(createFile(testStringBuilder.toString()));
 
     CpuMetrics snapshot = new CpuMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isTrue();
+    assertThat(collector.getSnapshot(snapshot, null)).isTrue();
 
     assertThat(snapshot.userTimeS).isEqualTo(13);
     assertThat(snapshot.systemTimeS).isEqualTo(14);
@@ -122,7 +122,7 @@ public class CpuMetricsCollectorTest
     TestableCpuMetricsCollector collector = new TestableCpuMetricsCollector().setPath("");
 
     CpuMetrics snapshot = new CpuMetrics();
-    assertThat(collector.getSnapshot(snapshot)).isFalse();
+    assertThat(collector.getSnapshot(snapshot, null)).isFalse();
   }
 
   private String createFile(String contents) throws IOException {

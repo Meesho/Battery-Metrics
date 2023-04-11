@@ -48,7 +48,7 @@ public class RadioStateCollector extends SystemMetricsCollector<RadioStateMetric
 
   @Override
   @ThreadSafe(enableChecks = false)
-  public boolean getSnapshot(RadioStateMetrics snapshot) {
+  public boolean getSnapshot(RadioStateMetrics snapshot, @javax.annotation.Nullable Context context) {
 
     final long mobileNextIdleTimeActive = mMobileRadioMonitor.mNextIdleTimeActive.get();
     snapshot.mobileHighPowerActiveS = MonotonicRadioMonitor.totalTxS(mobileNextIdleTimeActive);

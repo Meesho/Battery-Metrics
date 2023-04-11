@@ -29,6 +29,9 @@ abstract class NetworkBytesCollector {
 
   public abstract boolean supportsBgDistinction();
 
+  public void cleanUp(Context context){
+    //no op
+  }
   public abstract boolean getTotalBytes(@Size(8) long[] bytes);
 
   @SuppressLint("ObsoleteSdkInt")
@@ -47,4 +50,6 @@ abstract class NetworkBytesCollector {
     }
     return new TrafficStatsNetworkBytesCollector(context);
   }
+
+
 }

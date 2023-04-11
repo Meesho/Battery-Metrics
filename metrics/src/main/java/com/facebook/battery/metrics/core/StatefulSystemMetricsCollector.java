@@ -29,7 +29,7 @@ import androidx.annotation.Nullable;
 public class StatefulSystemMetricsCollector<
     R extends SystemMetrics<R>, S extends SystemMetricsCollector<R>> {
 
-  private final S mCollector;
+  private S mCollector;
   private final R mDiff;
 
   private R mCurr;
@@ -44,7 +44,7 @@ public class StatefulSystemMetricsCollector<
   public StatefulSystemMetricsCollector(S collector) {
     this(
         collector, collector.createMetrics(), collector.createMetrics(), collector.createMetrics());
-    mIsValid &= collector.getSnapshot(mPrev);
+    mIsValid &= collector.getSnapshot(mPrev, null);
   }
 
   /**
@@ -82,12 +82,16 @@ public class StatefulSystemMetricsCollector<
   /** Get a diff form the previous baseline. */
   @Nullable
   public R getLatestDiff() {
-    mIsValid &= mCollector.getSnapshot(this.mCurr);
+    mIsValid &= mCollector.getSnapshot(this.mCurr, null);
     if (!mIsValid) {
       return null;
     }
 
     mCurr.diff(mPrev, mDiff);
     return mDiff;
+  }
+
+  public void clearCollectors(){
+    mCollector = null;
   }
 }

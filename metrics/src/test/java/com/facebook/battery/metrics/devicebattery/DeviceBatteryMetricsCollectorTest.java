@@ -19,7 +19,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import com.facebook.battery.metrics.core.ShadowSystemClock;
-import java.util.List;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,6 +28,8 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.robolectric.RobolectricTestRunner;
+
+import java.util.List;
 
 @RunWith(RobolectricTestRunner.class)
 @org.robolectric.annotation.Config(shadows = {ShadowSystemClock.class})
@@ -51,7 +53,7 @@ public class DeviceBatteryMetricsCollectorTest {
     DeviceBatteryMetrics metrics = new DeviceBatteryMetrics();
     DeviceBatteryMetricsCollector collector = new DeviceBatteryMetricsCollector(mContext);
     ShadowSystemClock.setElapsedRealtime(10000);
-    collector.getSnapshot(metrics);
+    collector.getSnapshot(metrics, null);
     verifySnapshot(metrics, 20, 0, 5000);
   }
 
@@ -60,7 +62,7 @@ public class DeviceBatteryMetricsCollectorTest {
   public void testEmptyBatteryIntent() {
     DeviceBatteryMetrics metrics = new DeviceBatteryMetrics();
     DeviceBatteryMetricsCollector collector = new DeviceBatteryMetricsCollector(mContext);
-    collector.getSnapshot(metrics);
+    collector.getSnapshot(metrics, null);
   }
 
   @Test
@@ -70,7 +72,7 @@ public class DeviceBatteryMetricsCollectorTest {
         .thenReturn(createBatteryIntent(BatteryManager.BATTERY_STATUS_CHARGING, 20, 100));
     DeviceBatteryMetricsCollector collector = new DeviceBatteryMetricsCollector(mContext);
     mExpectedException.expect(IllegalArgumentException.class);
-    collector.getSnapshot(null);
+    collector.getSnapshot(null, null);
   }
 
   @Test
@@ -80,13 +82,13 @@ public class DeviceBatteryMetricsCollectorTest {
         .thenThrow(new SecurityException("Testing exception"));
     DeviceBatteryMetrics metrics = new DeviceBatteryMetrics();
     DeviceBatteryMetricsCollector collector = new DeviceBatteryMetricsCollector(mContext);
-    collector.getSnapshot(metrics);
+    collector.getSnapshot(metrics, null);
     assertThat(metrics.batteryLevelPct).isEqualTo(DeviceBatteryMetricsCollector.UNKNOWN_LEVEL);
   }
 
   @Test
   public void testSnapshotAfterValidBroadcasts() {
-    // Set up the collector
+     //Set up the collector
     ShadowSystemClock.setElapsedRealtime(5000);
     when(mContext.registerReceiver(
             Matchers.isNull(BroadcastReceiver.class), Matchers.any(IntentFilter.class)))
@@ -118,7 +120,7 @@ public class DeviceBatteryMetricsCollectorTest {
     when(mContext.registerReceiver(
             Matchers.isNull(BroadcastReceiver.class), Matchers.any(IntentFilter.class)))
         .thenReturn(createBatteryIntent(BatteryManager.BATTERY_STATUS_CHARGING, 20, 100));
-    collector.getSnapshot(metrics);
+    collector.getSnapshot(metrics, null);
     verifySnapshot(metrics, 20, 12000, 11000);
 
     // Power Connected and test getSnapshot
@@ -128,7 +130,7 @@ public class DeviceBatteryMetricsCollectorTest {
     when(mContext.registerReceiver(
             Matchers.isNull(BroadcastReceiver.class), Matchers.any(IntentFilter.class)))
         .thenReturn(createBatteryIntent(BatteryManager.BATTERY_STATUS_CHARGING, 30, 100));
-    collector.getSnapshot(metrics);
+    collector.getSnapshot(metrics, null);
     verifySnapshot(metrics, 30, 14000, 23000);
 
     // PowerConnected and testGetSnapshot (Check for two consecutive CONNECTED intents)
@@ -138,7 +140,7 @@ public class DeviceBatteryMetricsCollectorTest {
     when(mContext.registerReceiver(
             Matchers.isNull(BroadcastReceiver.class), Matchers.any(IntentFilter.class)))
         .thenReturn(createBatteryIntent(BatteryManager.BATTERY_STATUS_CHARGING, 40, 100));
-    collector.getSnapshot(metrics);
+    collector.getSnapshot(metrics, null);
     verifySnapshot(metrics, 40, 14000, 32000);
 
     // Test for 2 consecutive powerdisconnected intents
@@ -150,7 +152,7 @@ public class DeviceBatteryMetricsCollectorTest {
     when(mContext.registerReceiver(
             Matchers.isNull(BroadcastReceiver.class), Matchers.any(IntentFilter.class)))
         .thenReturn(createBatteryIntent(BatteryManager.BATTERY_STATUS_CHARGING, 60, 100));
-    collector.getSnapshot(metrics);
+    collector.getSnapshot(metrics, null);
     verifySnapshot(metrics, 60, 24000, 36000);
   }
 

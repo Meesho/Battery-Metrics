@@ -7,6 +7,10 @@
 
 package com.facebook.battery.metrics.core;
 
+import android.content.Context;
+
+import javax.annotation.Nullable;
+
 /**
  * Takes snapshots of a given metric. There are generally two types of metrics collectors - - those
  * that depend on an underlying api, such as the {@link
@@ -22,10 +26,11 @@ public abstract class SystemMetricsCollector<T extends SystemMetrics> {
    * by the caller requesting getSnapshot.
    *
    * @param snapshot snapshot on which the data will be written
+   * @param context
    * @return true if the snapshot has been updated with valid data.
    * @throws IllegalArgumentException if snapshot == null.
    */
-  public abstract boolean getSnapshot(T snapshot);
+  public abstract boolean getSnapshot(T snapshot, @Nullable Context context);
 
   /**
    * Creates an empty instance of the corresponding system metrics.

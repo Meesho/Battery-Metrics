@@ -9,6 +9,7 @@ package com.facebook.battery.metrics.camera;
 
 import static com.facebook.battery.metrics.core.Utilities.checkNotNull;
 
+import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
@@ -21,6 +22,8 @@ import androidx.annotation.GuardedBy;
 import com.facebook.battery.metrics.core.SystemMetricsCollector;
 import com.facebook.battery.metrics.core.SystemMetricsLogger;
 import com.facebook.infer.annotation.ThreadSafe;
+
+import javax.annotation.Nullable;
 
 /**
  * CameraMetricsCollector internally maintains how long the camera was open and previewed; this is
@@ -64,7 +67,7 @@ public class CameraMetricsCollector extends SystemMetricsCollector<CameraMetrics
   public CameraMetricsCollector() {}
 
   @Override
-  public synchronized boolean getSnapshot(CameraMetrics snapshot) {
+  public synchronized boolean getSnapshot(CameraMetrics snapshot, @Nullable Context context) {
     checkNotNull(snapshot, "Null value passed to getSnapshot!");
     if (!mIsEnabled) {
       return false;

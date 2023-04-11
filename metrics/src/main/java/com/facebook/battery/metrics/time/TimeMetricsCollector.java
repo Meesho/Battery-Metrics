@@ -9,10 +9,13 @@ package com.facebook.battery.metrics.time;
 
 import static com.facebook.battery.metrics.core.Utilities.checkNotNull;
 
+import android.content.Context;
 import android.os.SystemClock;
 import com.facebook.battery.metrics.core.SystemMetricsCollector;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ThreadSafe;
+
+import javax.annotation.Nullable;
 
 /**
  * Records system uptime (doesn't include time when the phone was asleep) and realtime (actual time
@@ -25,7 +28,7 @@ public class TimeMetricsCollector extends SystemMetricsCollector<TimeMetrics> {
 
   @Override
   @ThreadSafe(enableChecks = false)
-  public boolean getSnapshot(TimeMetrics snapshot) {
+  public boolean getSnapshot(TimeMetrics snapshot, @Nullable Context context) {
     checkNotNull(snapshot, "Null value passed to getSnapshot!");
     snapshot.realtimeMs = SystemClock.elapsedRealtime();
     snapshot.uptimeMs = SystemClock.uptimeMillis();

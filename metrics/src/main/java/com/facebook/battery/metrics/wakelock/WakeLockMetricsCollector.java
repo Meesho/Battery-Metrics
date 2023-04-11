@@ -9,6 +9,7 @@ package com.facebook.battery.metrics.wakelock;
 
 import static com.facebook.battery.metrics.core.Utilities.checkNotNull;
 
+import android.content.Context;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import androidx.annotation.GuardedBy;
@@ -18,6 +19,8 @@ import com.facebook.battery.metrics.core.SystemMetricsLogger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.WeakHashMap;
+
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -180,7 +183,7 @@ public class WakeLockMetricsCollector extends SystemMetricsCollector<WakeLockMet
   }
 
   @Override
-  public synchronized boolean getSnapshot(WakeLockMetrics snapshot) {
+  public synchronized boolean getSnapshot(WakeLockMetrics snapshot, @Nullable Context context) {
     checkNotNull(snapshot, "Null value passed to getSnapshot!");
     if (!mIsEnabled) {
       return false;

@@ -10,10 +10,13 @@ package com.facebook.battery.metrics.appwakeup;
 import static com.facebook.battery.metrics.appwakeup.AppWakeupMetrics.WakeupDetails;
 import static com.facebook.battery.metrics.core.Utilities.checkNotNull;
 
+import android.content.Context;
 import android.os.SystemClock;
 import com.facebook.battery.metrics.core.SystemMetricsCollector;
 import com.facebook.battery.metrics.core.SystemMetricsLogger;
 import com.facebook.infer.annotation.ThreadSafe;
+
+import javax.annotation.Nullable;
 
 /**
  * This class is used to record and aggregate the wakeups in the app. It exposes methods to record
@@ -34,7 +37,7 @@ public class AppWakeupMetricsCollector extends SystemMetricsCollector<AppWakeupM
 
   @Override
   @ThreadSafe(enableChecks = false)
-  public synchronized boolean getSnapshot(AppWakeupMetrics snapshot) {
+  public synchronized boolean getSnapshot(AppWakeupMetrics snapshot, @Nullable Context context) {
     checkNotNull(snapshot, "Null value passed to getSnapshot!");
     // TODO: Optimize by taking intersection of the two lists
     snapshot.appWakeups.clear();

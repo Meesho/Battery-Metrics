@@ -9,6 +9,7 @@ package com.facebook.battery.metrics.memory;
 
 import static com.facebook.battery.metrics.core.Utilities.checkNotNull;
 
+import android.content.Context;
 import android.os.Debug;
 import androidx.annotation.GuardedBy;
 import com.facebook.battery.metrics.core.ProcFileReader;
@@ -17,6 +18,8 @@ import com.facebook.battery.metrics.core.SystemMetricsLogger;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ThreadSafe;
 import java.util.concurrent.atomic.AtomicLong;
+
+import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 @ThreadSafe
@@ -35,7 +38,7 @@ public class MemoryMetricsCollector extends SystemMetricsCollector<MemoryMetrics
 
   @Override
   @ThreadSafe(enableChecks = false)
-  public synchronized boolean getSnapshot(MemoryMetrics snapshot) {
+  public synchronized boolean getSnapshot(MemoryMetrics snapshot, @Nullable Context context) {
     checkNotNull(snapshot, "Null value passed to getSnapshot!");
     if (!mIsEnabled) {
       return false;
