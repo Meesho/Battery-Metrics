@@ -17,7 +17,6 @@ import android.os.BatteryManager;
 import android.os.SystemClock;
 import androidx.annotation.Nullable;
 
-import com.facebook.battery.metrics.core.DeviceBatteryMetricsInterface;
 import com.facebook.battery.metrics.core.SystemMetricsCollector;
 import com.facebook.battery.metrics.core.SystemMetricsLogger;
 import com.facebook.battery.metrics.core.VisibleToAvoidSynthetics;
